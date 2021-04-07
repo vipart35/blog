@@ -29,12 +29,12 @@
         <div class="row">
           <section class="content__left col-md-8">
             <div class="block">
-              <a href="#">Все записи</a>
+              <a href="/articles.php">Все записи</a>
               <h3>Новейшее_в_блоге</h3>
               <div class="block__content">
                 <div class="articles articles__horizontal">
                   <?php
-                    $articles = mysqli_query($connection, "SELECT * FROM `articles`");
+                    $articles = mysqli_query($connection, "SELECT * FROM `articles` ORDER BY 'id' DESC LIMIT 10");
                   ?>
 
                   <?php
@@ -44,11 +44,22 @@
                   <article class="article">
                     <div class="article__image" style="background-image: url(/static/images/<?php echo $art['image'];?>);"></div>
                     <div class="article__info">
-                      <a href="/article.php?id=<?php ?>"><?php echo $art['title']; ?></a>
+                      <a href="/article.php?id=<?php ?>"><?php echo $art['id']; ?>"</a>
                       <div class="article__info__meta">
-                        <small>Категория: <a href="#">Программирование</a></small>
+                        <?php
+                        $art_cat = false;
+                        foreach( $categories as $cat )
+                        {
+                          if( $cat['id'] == $art['categories_id'])
+                          {
+                            $art_cat = $cat;
+                            break;
+                        }
+                      }
+                      ?>
+                        <small>Категория: <a href="/articles.php?categories=<?php echo $art_cat['id'];?>"><?php echo $art_cat['title']; ?></a></small>
                       </div>
-                      <div class="article__info__preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna ...</div>
+                      <div class="article__info__preview"><?php echo mb_substr($art['text'], 0, 50, 'utf-8'); ?></div>
                     </div>
                   </article>
                       <?php
